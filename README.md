@@ -20,3 +20,16 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+---
+
+## Evironment
+To work with openTDB, you need to generate a token. For that:
+```shell
+python ODBtoken.py
+```
+Put this token in the .env :
+```shell
+cp .env.exemple .env
+nano .env
+```
+
