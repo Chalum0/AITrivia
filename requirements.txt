@@ -4,3 +4,4 @@ pandas
 pyarrow
 fastparquet
 openai
+pydantic
