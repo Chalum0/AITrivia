@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from openai import OpenAI
 import pandas as pd
+import random
 import json
 import html
 import ast
@@ -36,22 +37,27 @@ def prepareResponses(pathToCsvFile):
 
     for index, row in df.iterrows():
         incorrect_answers = ast.literal_eval(row["incorrect_answers"])
-
         possible_answers = [
             html.unescape(answer)
             for answer in [row["correct_answer"], *incorrect_answers]
         ]
+        question = row["question"]
+        llm_response = ask_LLM(question, possible_answers)
 
-        print(possible_answers)
+        # ajouter llm_response et llm_correct
+        # llm_correct = lower(llm_response)==lower(row["correct_answer"])
 
 
 def ask_LLM(question, responses):
+    responses = responses.copy()
+    random.shuffle(responses)
+
     answer = client.responses.parse(
         model=MODEL,
         input=[
             {
                 "role": "user",
-                "content": f"Question : \n {question} \n\n Possible Answer: \n {responses}",
+                "content": f"Question : \n {question} \n\n Possible Answers: \n {responses}",
             }
         ],
         text_format=Answer,
