@@ -13,17 +13,17 @@ load_dotenv()
 token = os.getenv("OPENTDB_TOKEN")
 tk.reset_token(token)
 
-PATH_TO_BRONZE = "./bronze"
-CSV_FILE_NAME = "questions.csv"
-if os.path.exists(f"{PATH_TO_BRONZE}/{CSV_FILE_NAME}"):
-    os.remove(f"{PATH_TO_BRONZE}/{CSV_FILE_NAME}")
+PATH_TO_BRONZE = os.getenv("PATH_TO_BRONZE")
+BRONZE_FILE_NAME = os.getenv("BRONZE_FILE_NAME")
+if os.path.exists(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}"):
+    os.remove(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}")
 os.makedirs(f"{PATH_TO_BRONZE}", exist_ok=True)
 
 def store_bronze(apiResult, headers=False):
     df = pd.DataFrame(apiResult)
     for column in df:
         df[column] = df[column].map(html.unescape)
-    df.to_csv(f'{PATH_TO_BRONZE}/{CSV_FILE_NAME}', encoding="utf-8", mode="a", header=headers, index=False)
+    df.to_csv(f'{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}', encoding="utf-8", mode="a", header=headers, index=False)
 
 
 def get_trivia() -> list:
