@@ -15,12 +15,14 @@ token = os.getenv("OPENTDB_TOKEN")
 tk.reset_token(token)
 
 PATH_TO_BRONZE = "./bronze"
+CSV_FILE_NAME = "questions.csv"
+os.remove(f"{PATH_TO_BRONZE}/{CSV_FILE_NAME}")
 
 def store_bronze(apiResult):
     df = pd.DataFrame(apiResult)
     for column in df:
         df[column] = df[column].map(html.unescape)
-    df.to_csv(f'{PATH_TO_BRONZE}/questions.csv', encoding="utf-8", mode="a", header="false")
+    df.to_csv(f'{PATH_TO_BRONZE}/{CSV_FILE_NAME}', encoding="utf-8", mode="a", header="false")
 
 
 def get_trivia() -> list:
