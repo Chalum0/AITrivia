@@ -1,18 +1,18 @@
 from dotenv import load_dotenv
 from pathlib import Path
 import ODBtoken as tk
+import pandas as pd
 import requests
+import html
 import json
+import time
+import csv
 import os
 
 load_dotenv()
 
 token = os.getenv("OPENTDB_TOKEN")
 tk.reset_token(token)
-
-import csv
-import pandas as pd
-import html
 
 PATH_TO_BRONZE = "./bronze"
 
@@ -53,6 +53,7 @@ def run():
         if not results:
             break
         store_bronze(results)
+        time.sleep(5.2)
     print("Saved data")
 
 
