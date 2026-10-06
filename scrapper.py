@@ -10,11 +10,18 @@ load_dotenv()
 token = os.getenv("OPENTDB_TOKEN")
 tk.reset_token(token)
 
+import csv
+import pandas as pd
+import html
 
-def store_bronze(blabla):
-    pass
-    # Foutre dans le CSV
-    # Le csv doit etre dans un dossier bronze
+PATH_TO_BRONZE = "./bronze"
+
+def store_bronze(apiResult):
+    df = pd.DataFrame(apiResult)
+    for column in df:
+        df[column] = df[column].map(html.unescape)
+    df.to_csv(f'{PATH_TO_BRONZE}/questions.csv', encoding="utf-8", mode="a", header="false")
+
 
 def get_trivia() -> list:
     try:
