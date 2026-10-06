@@ -50,8 +50,6 @@ def prepareResponses(pathToCsvFile):
         )
 
     df.to_parquet(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}", index=False)
-        # ajouter llm_response et llm_correct
-        # llm_correct = lower(llm_response)==lower(row["correct_answer"])
 
 
 def ask_LLM(question, responses):
@@ -69,7 +67,7 @@ def ask_LLM(question, responses):
         text_format=Answer,
         reasoning={"effort": "none"},
     )
-    return str(answer.output_parsed)
+    return str(answer.output_parsed.answer)
 
 
 
