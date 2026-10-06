@@ -41,9 +41,15 @@ def prepareResponses(pathToCsvFile):
             html.unescape(answer)
             for answer in [row["correct_answer"], *incorrect_answers]
         ]
-        question = row["question"]
+        question = html.unescape(row["question"])
         llm_response = ask_LLM(question, possible_answers)
 
+        df.at[index, "llm_response"] = llm_response
+        df.at[index, "llm_correct"] = (
+            llm_response.lower() == html.unescape(row["correct_answer"]).lower()
+        )
+
+    df.to_parquet(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}", index=False)
         # ajouter llm_response et llm_correct
         # llm_correct = lower(llm_response)==lower(row["correct_answer"])
 
