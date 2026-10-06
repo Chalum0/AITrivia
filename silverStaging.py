@@ -69,7 +69,7 @@ def ask_LLM(question, responses):
         text_format=Answer,
         reasoning={"effort": "none"},
     )
-    return answer.output_parsed
+    return str(answer.output_parsed)
 
 
 
