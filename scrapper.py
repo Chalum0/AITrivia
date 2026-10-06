@@ -23,7 +23,7 @@ def store_bronze(apiResult, headers=False):
     df = pd.DataFrame(apiResult)
     for column in df:
         df[column] = df[column].map(html.unescape)
-    df.to_csv(f'{PATH_TO_BRONZE}/{CSV_FILE_NAME}', encoding="utf-8", mode="a", header=headers)
+    df.to_csv(f'{PATH_TO_BRONZE}/{CSV_FILE_NAME}', encoding="utf-8", mode="a", header=headers, index=False)
 
 
 def get_trivia() -> list:
