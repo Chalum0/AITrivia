@@ -2,6 +2,9 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import pandas as pd
 import os
+import json
+import ast
+import html
 
 
 load_dotenv()
@@ -22,9 +25,17 @@ if not os.path.exists(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}"):
 
 def prepareResponses(pathToCsvFile):
     df = pd.read_csv(pathToCsvFile)
-    for row in df:
-        possible_answers = [df["correct_answer"], *df["incorrect_answers"]]
-        
+
+    for index, row in df.iterrows():
+        incorrect_answers = ast.literal_eval(row["incorrect_answers"])
+
+        possible_answers = [
+            html.unescape(answer)
+            for answer in [row["correct_answer"], *incorrect_answers]
+        ]
+
+        print(possible_answers)
+
     
     
 
