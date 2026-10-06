@@ -1,11 +1,17 @@
 import requests
 import json
 import csv
+import pandas as pd
+import html
 
-def store_bronze(blabla):
-    pass
-    # Foutre dans le CSV
-    # Le csv doit etre dans un dossier bronze
+PATH_TO_BRONZE = "./bronze"
+
+def store_bronze(apiResult):
+    df = pd.DataFrame(apiResult)
+    for column in df:
+        df[column] = df[column].map(html.unescape)
+    df.to_csv(f'{PATH_TO_BRONZE}/questions.csv', encoding="utf-8", mode="a", header="false")
+
 
 def get_50_results():
     return []
@@ -13,7 +19,7 @@ def get_50_results():
 def run():
     while True:
         results = get_50_results()
-        put_in_csv(results)
+        store_bronze()
         break
     print("prout")
 
