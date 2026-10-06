@@ -22,12 +22,10 @@ if not os.path.exists(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}"):
 
 def prepareResponses(pathToCsvFile):
     df = pd.read_csv(pathToCsvFile)
-    df["possible_answers"] = (
-        df["correct_answer"] + df["incorrect_answers"]
-    )
-    df.to_csv("./aucasou/test.csv")
-    print(df.columns)
-
+    for row in df:
+        possible_answers = [df["correct_answer"], *df["incorrect_answers"]]
+        
+    
     
 
 
