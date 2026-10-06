@@ -48,6 +48,7 @@ def prepareResponses(pathToCsvFile):
         df.at[index, "llm_correct"] = (
             llm_response.lower() == html.unescape(row["correct_answer"]).lower()
         )
+        print(f"Row: {index}, llm: {llm_response} : {llm_response.lower() == html.unescape(row['correct_answer']).lower()}")
 
     df.to_parquet(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}", index=False)
 
