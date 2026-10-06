@@ -2,10 +2,10 @@ from dotenv import load_dotenv
 from pydantic import BaseModel
 from openai import OpenAI
 import pandas as pd
-import os
 import json
-import ast
 import html
+import ast
+import os
 
 load_dotenv()
 
