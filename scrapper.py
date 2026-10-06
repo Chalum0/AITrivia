@@ -19,11 +19,11 @@ if os.path.exists(f"{PATH_TO_BRONZE}/{CSV_FILE_NAME}"):
     os.remove(f"{PATH_TO_BRONZE}/{CSV_FILE_NAME}")
 os.makedirs(f"{PATH_TO_BRONZE}", exist_ok=True)
 
-def store_bronze(apiResult):
+def store_bronze(apiResult, headers=False):
     df = pd.DataFrame(apiResult)
     for column in df:
         df[column] = df[column].map(html.unescape)
-    df.to_csv(f'{PATH_TO_BRONZE}/{CSV_FILE_NAME}', encoding="utf-8", mode="a", header=False)
+    df.to_csv(f'{PATH_TO_BRONZE}/{CSV_FILE_NAME}', encoding="utf-8", mode="a", header=headers)
 
 
 def get_trivia() -> list:
@@ -51,11 +51,14 @@ def get_trivia() -> list:
 
 
 def run():
+    i = 0
     while True:
         results = get_trivia()
         if not results:
             break
-        store_bronze(results)
+        store_bronze(results, i==0)
+        i += 1
+        print(f"Pulled {i*50} rows in total.")
         time.sleep(5.2)
     print("Saved data")
 
