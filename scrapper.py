@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-from pathlib import Path
 import ODBtoken as tk
 import pandas as pd
 import requests
@@ -16,7 +15,9 @@ tk.reset_token(token)
 
 PATH_TO_BRONZE = "./bronze"
 CSV_FILE_NAME = "questions.csv"
-os.remove(f"{PATH_TO_BRONZE}/{CSV_FILE_NAME}")
+if os.path.exists(f"{PATH_TO_BRONZE}/{CSV_FILE_NAME}"):
+    os.remove(f"{PATH_TO_BRONZE}/{CSV_FILE_NAME}")
+os.makedirs(f"{PATH_TO_BRONZE}", exist_ok=True)
 
 def store_bronze(apiResult):
     df = pd.DataFrame(apiResult)
