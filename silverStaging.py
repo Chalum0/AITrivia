@@ -13,12 +13,25 @@ SILVER_FILE_NAME = os.getenv("SILVER_FILE_NAME")
 
 if not os.path.exists(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}"):
     raise FileNotFoundError("Bronze file not found")
-if os.path.exists(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}"):
-    os.remove(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}")
-os.makedirs(f"{PATH_TO_SILVER}", exist_ok=True)
+# if os.path.exists(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}"):
+#     os.remove(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}")
+# os.makedirs(f"{PATH_TO_SILVER}", exist_ok=True)
 
 
-df = pd.read_csv(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}")
+# df = pd.read_csv(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}")
+
+def prepareResponses(pathToCsvFile):
+    df = pd.read_csv(pathToCsvFile)
+    for row in df:
+        question = row["question"]
+        correct_answer = row["correct_answer"]
+        incorrect_answers = row["incorrect_answers"]
+        print(question)
+
+
+prepareResponses(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}")
+# def askAI(dataframe):
+
 
 
 
