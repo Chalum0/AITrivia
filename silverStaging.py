@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from openai import OpenAI
 import pandas as pd
 import os
 
@@ -19,4 +20,6 @@ os.makedirs(f"{PATH_TO_SILVER}", exist_ok=True)
 
 df = pd.read_csv(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}")
 
-df.to_parquet(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}")
+
+
+# df.to_parquet(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}")
