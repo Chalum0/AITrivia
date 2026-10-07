@@ -4,16 +4,13 @@ config-version: 2
 
 profile: aitrivia
 
-model-paths: ["models"]
+model-paths: ["./src/models/"]
 
 models:
   aitrivia:
     staging:
       +materialized: view
-      +schema: staging
     intermediate:
       +materialized: view
-      +schema: intermediate
     marts:
       +materialized: table
-      +schema: gold

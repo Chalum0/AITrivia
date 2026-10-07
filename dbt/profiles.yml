@@ -1,8 +1,0 @@
-aitrivia:
-  target: dev
-  outputs:
-    dev:
-      type: duckdb
-      path: "{{ env_var('AITRIVIA_ROOT') }}/gold/benchmark.duckdb"
-      schema: main
-      threads: 1
