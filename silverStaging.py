@@ -4,6 +4,7 @@ from openai import OpenAI
 import pandas as pd
 import random
 import json
+import time
 import html
 import ast
 import os
@@ -36,18 +37,21 @@ def prepareResponses(pathToCsvFile):
     df = pd.read_csv(pathToCsvFile)
 
     for index, row in df.iterrows():
+        start = time.time()
         incorrect_answers = ast.literal_eval(row["incorrect_answers"])
         possible_answers = [
             html.unescape(answer)
-            for answer in [row["correct_answer"], *incorrect_answers]
+            for answer in [row["correct_answer"], *incorrect_answers, "None"]
         ]
         question = html.unescape(row["question"])
         llm_response = ask_LLM(question, possible_answers)
+        response_time = time.time() - start
 
         df.at[index, "llm_response"] = llm_response
         df.at[index, "llm_correct"] = (
             llm_response.lower() == html.unescape(row["correct_answer"]).lower()
         )
+        df.at[index, "response_time"] = response_time
         print(f"Row: {index}, llm: {llm_response} : {llm_response.lower() == html.unescape(row['correct_answer']).lower()}")
 
     df.to_parquet(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}", index=False)
