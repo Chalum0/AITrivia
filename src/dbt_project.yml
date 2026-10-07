@@ -1,0 +1,16 @@
+name: aitrivia
+version: "1.0.0"
+config-version: 2
+
+profile: aitrivia
+
+model-paths: ["./models/"]
+
+models:
+  aitrivia:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table
