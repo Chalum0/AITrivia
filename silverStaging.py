@@ -33,12 +33,26 @@ class Answer(BaseModel):
     answer: str
 
 
+def clean_dataframe(dataframe):
+    for index, row in dataframe.iterrows():
+        dataframe["incorrect_answers"] = pd.Series(
+            [
+                ast.literal_eval(value) if isinstance(value, str) else value
+                for value in dataframe["incorrect_answers"]
+            ],
+            index=dataframe.index,
+            dtype=object,
+        )
+    return dataframe
+
+
 def prepareResponses(pathToCsvFile):
     df = pd.read_csv(pathToCsvFile)
+    df = clean_dataframe(df)
 
     for index, row in df.iterrows():
         start = time.time()
-        incorrect_answers = ast.literal_eval(row["incorrect_answers"])
+        incorrect_answers = row["incorrect_answers"]
         possible_answers = [
             html.unescape(answer)
             for answer in [row["correct_answer"], *incorrect_answers, "None"]
