@@ -33,3 +33,18 @@ cp .env.exemple .env
 nano .env
 ```
 
+---
+
+## Bronze Layer
+The first step is to fetch the content from the remote api. The goal is have every data in a csv file. For that:
+
+```shell
+python scrapper.py
+```
+
+This should run for a moment since the api only allows a call every 5 seconds. Progress should be displayed.
+
+---
+
+## Silver Layer
+For that layer, the first step is fill out the environment variables for the openai api. 

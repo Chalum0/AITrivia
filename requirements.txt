@@ -1,3 +1,9 @@
 requests
 python-dotenv
 pandas
+pyarrow
+fastparquet
+openai
+pydantic
+dbt-duckdb
+streamlit

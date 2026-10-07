@@ -2,3 +2,6 @@ __pycache__
 .venv
 .env
 .python-version
+bronze/questions.csv
+silver/questions.parquet
+aucasou/

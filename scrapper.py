@@ -1,8 +1,11 @@
 from dotenv import load_dotenv
-from pathlib import Path
 import ODBtoken as tk
+import pandas as pd
 import requests
+import html
 import json
+import time
+import csv
 import os
 
 load_dotenv()
@@ -10,17 +13,17 @@ load_dotenv()
 token = os.getenv("OPENTDB_TOKEN")
 tk.reset_token(token)
 
-import csv
-import pandas as pd
-import html
+PATH_TO_BRONZE = os.getenv("PATH_TO_BRONZE")
+BRONZE_FILE_NAME = os.getenv("BRONZE_FILE_NAME")
+if os.path.exists(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}"):
+    os.remove(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}")
+os.makedirs(f"{PATH_TO_BRONZE}", exist_ok=True)
 
-PATH_TO_BRONZE = "./bronze"
-
-def store_bronze(apiResult):
+def store_bronze(apiResult, headers=False):
     df = pd.DataFrame(apiResult)
     for column in df:
         df[column] = df[column].map(html.unescape)
-    df.to_csv(f'{PATH_TO_BRONZE}/questions.csv', encoding="utf-8", mode="a", header="false")
+    df.to_csv(f'{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}', encoding="utf-8", mode="a", header=headers, index=False)
 
 
 def get_trivia() -> list:
@@ -48,11 +51,15 @@ def get_trivia() -> list:
 
 
 def run():
+    i = 0
     while True:
         results = get_trivia()
         if not results:
             break
-        store_bronze(results)
+        store_bronze(results, i==0)
+        i += 1
+        print(f"Pulled {i*50} rows in total.")
+        time.sleep(5.2)
     print("Saved data")
 
 
