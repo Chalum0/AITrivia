@@ -11,3 +11,4 @@ logs/
 src/logs/
 src/target/
 src/.user.yml
+warehouse/benchmark.duckdb
