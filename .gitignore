@@ -5,3 +5,5 @@ __pycache__
 bronze/questions.csv
 silver/questions.parquet
 aucasou/
+.DS_Store/
+.idea/
