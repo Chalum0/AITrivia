@@ -19,8 +19,8 @@ MODEL = os.getenv("OPENAI_MODEL")
 
 if not os.path.exists(f"{PATH_TO_BRONZE}/{BRONZE_FILE_NAME}"):
     raise FileNotFoundError("Bronze file not found")
-if os.path.exists(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}"):
-    os.remove(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}")
+# if os.path.exists(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}"):
+#     os.remove(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}")
 os.makedirs(f"{PATH_TO_SILVER}", exist_ok=True)
 
 
@@ -47,7 +47,8 @@ def clean_dataframe(dataframe):
 
 
 def prepareResponses(pathToCsvFile):
-    df = pd.read_csv(pathToCsvFile)
+    # df = pd.read_csv(pathToCsvFile)
+    df = pd.read_parquet(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}")
     df = clean_dataframe(df)
 
     for index, row in df.iterrows():
@@ -55,29 +56,42 @@ def prepareResponses(pathToCsvFile):
         incorrect_answers = row["incorrect_answers"]
         possible_answers = [
             html.unescape(answer)
-            for answer in [row["correct_answer"], *incorrect_answers, "None"]
+            for answer in [row["correct_answer"], *incorrect_answers]
         ]
+        possible_answers_with_none = [*possible_answers, "None"]
         question = html.unescape(row["question"])
-        llm_response = ask_LLM(question, possible_answers)
+        prompt = f"You are an agent specialized in answering trivia questions. You have the knowledge and will be given choices. One of the choices is correct. There are no question where none of the responses is correct."
+
+        # llm_response = ask_LLM(question, possible_answers_with_none, "")
+        llm_response_instructed = ask_LLM(question, possible_answers, prompt)
         response_time = time.time() - start
 
-        df.at[index, "llm_response"] = llm_response
-        df.at[index, "llm_correct"] = (
-            llm_response.lower() == html.unescape(row["correct_answer"]).lower()
+        # df.at[index, "llm_response"] = llm_response
+        # df.at[index, "llm_correct"] = (
+        #     llm_response.lower() == html.unescape(row["correct_answer"]).lower()
+        # )
+        df.at[index, "llm_response_instructed"] = llm_response_instructed
+        df.at[index, "llm_correct_instructed"] = (
+            llm_response_instructed.lower() == html.unescape(row["correct_answer"]).lower()
         )
         df.at[index, "response_time"] = response_time
-        print(f"Row: {index}, llm: {llm_response} : {llm_response.lower() == html.unescape(row['correct_answer']).lower()}")
+        # print(f"Row: {index}, llm: {llm_response} : {llm_response.lower() == html.unescape(row['correct_answer']).lower()}")
+        print(f"Row: {index}, llm_instructed: {llm_response_instructed} : {llm_response_instructed.lower() == html.unescape(row['correct_answer']).lower()}")
 
     df.to_parquet(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}", index=False)
 
 
-def ask_LLM(question, responses):
+def ask_LLM(question, responses, system_prompt):
     responses = responses.copy()
     random.shuffle(responses)
 
     answer = client.responses.parse(
         model=MODEL,
         input=[
+            {
+                "role": "system",
+                "content": system_prompt
+            },
             {
                 "role": "user",
                 "content": f"Question : \n {question} \n\n Possible Answers: \n {responses}",
