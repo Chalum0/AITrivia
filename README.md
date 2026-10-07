@@ -47,4 +47,26 @@ This should run for a moment since the api only allows a call every 5 seconds. P
 ---
 
 ## Silver Layer
-For that layer, the first step is fill out the environment variables for the openai api. 
+For that layer, the first step is fill out the environment variables for the openai api. The run
+```shell
+python silverStaging.py
+```
+This command might take a while depending on the model used.
+
+
+## Gold Layer
+For that layer, we first need to make a simple env var:
+```shell
+export AITRIVIA_ROOT="$PWD"
+```
+
+Then run
+```shell
+python build_gold.py
+```
+
+## Graphs
+you can now display stats:
+```shell
+python -m streamlit run app.py
+```
