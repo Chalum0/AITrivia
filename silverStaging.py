@@ -62,20 +62,20 @@ def prepareResponses(pathToCsvFile):
         question = html.unescape(row["question"])
         prompt = f"You are an agent specialized in answering trivia questions. You have the knowledge and will be given choices. One of the choices is correct. There are no question where none of the responses is correct."
 
-        # llm_response = ask_LLM(question, possible_answers_with_none, "")
+        llm_response = ask_LLM(question, possible_answers_with_none, "")
         llm_response_instructed = ask_LLM(question, possible_answers, prompt)
         response_time = time.time() - start
 
-        # df.at[index, "llm_response"] = llm_response
-        # df.at[index, "llm_correct"] = (
-        #     llm_response.lower() == html.unescape(row["correct_answer"]).lower()
-        # )
+        df.at[index, "llm_response"] = llm_response
+        df.at[index, "llm_correct"] = (
+            llm_response.lower() == html.unescape(row["correct_answer"]).lower()
+        )
         df.at[index, "llm_response_instructed"] = llm_response_instructed
         df.at[index, "llm_correct_instructed"] = (
             llm_response_instructed.lower() == html.unescape(row["correct_answer"]).lower()
         )
         df.at[index, "response_time"] = response_time
-        # print(f"Row: {index}, llm: {llm_response} : {llm_response.lower() == html.unescape(row['correct_answer']).lower()}")
+        print(f"Row: {index}, llm: {llm_response} : {llm_response.lower() == html.unescape(row['correct_answer']).lower()}")
         print(f"Row: {index}, llm_instructed: {llm_response_instructed} : {llm_response_instructed.lower() == html.unescape(row['correct_answer']).lower()}")
 
     df.to_parquet(f"{PATH_TO_SILVER}/{SILVER_FILE_NAME}", index=False)
