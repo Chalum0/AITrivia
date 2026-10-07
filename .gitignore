@@ -7,3 +7,7 @@ silver/questions.parquet
 aucasou/
 .DS_Store/
 .idea/
+logs/
+src/logs/
+src/target/
+src/.user.yml

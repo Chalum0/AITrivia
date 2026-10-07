@@ -4,7 +4,7 @@ config-version: 2
 
 profile: aitrivia
 
-model-paths: ["./src/models/"]
+model-paths: ["./models/"]
 
 models:
   aitrivia:
